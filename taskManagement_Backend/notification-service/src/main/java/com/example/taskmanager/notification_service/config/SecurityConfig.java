@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()    
                         .requestMatchers("/notifications/**").permitAll()   // 🔥 ALLOW
                         //.requestMatchers("/actuator/**").permitAll()
                         //.anyRequest().authenticated())
