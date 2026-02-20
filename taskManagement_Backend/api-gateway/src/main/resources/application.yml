@@ -11,7 +11,6 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:3000"
               - "http://77.37.47.79:3000"  #  FRONTEND URL
             allowedMethods:
               - GET
