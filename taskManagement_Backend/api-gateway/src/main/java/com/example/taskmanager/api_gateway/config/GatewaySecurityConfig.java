@@ -15,10 +15,10 @@
 
             http
                     .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                    .cors(cors -> {}) // ✅ VERY IMPORTANT
+                    .cors(cors -> {}) //  VERY IMPORTANT
                     .authorizeExchange(exchange -> exchange
-                            .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ REQUIRED
-                            // ✅ ADD THIS LINE
+                            .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //  REQUIRED
+                            //  ADD THIS LINE
                             .pathMatchers("/actuator/**").permitAll()
                             .pathMatchers("/api/auth/**").permitAll()
                             .pathMatchers("/tasks/**").permitAll()
@@ -26,7 +26,7 @@
                             .pathMatchers("/api/comments/**").permitAll()
                             .pathMatchers("/projects/**").permitAll()
                             .pathMatchers("/api/teams/**").permitAll()
-                            .pathMatchers("/ws/**").permitAll()   // 🔥 ADD THIS
+                            .pathMatchers("/ws/**").permitAll()   //  ADD THIS
                             .anyExchange().authenticated()
                     );
 

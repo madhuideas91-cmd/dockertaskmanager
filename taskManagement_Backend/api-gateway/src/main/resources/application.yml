@@ -12,11 +12,12 @@ spring:
           '[/**]':
             allowedOrigins:
               - "http://localhost:3000"
+              - "http://77.37.47.79:3000"  #  FRONTEND URL
             allowedMethods:
               - GET
               - POST
               - PUT
-              - PATCH   # 🔥 REQUIRED
+              - PATCH   #  REQUIRED
               - DELETE
               - OPTIONS
             allowedHeaders:
