@@ -3,8 +3,7 @@ import axios from "axios";
 
 // Axios instance for notifications microservice
 const axiosNotifInstance = axios.create({
-  baseURL: "http://77.37.47.79:8080", // ✅ notifications backend
-  // baseURL:"/",    // for nignix
+  baseURL: process.env.REACT_APP_API_URL || "",
   withCredentials: true,
   timeout: 10000
 

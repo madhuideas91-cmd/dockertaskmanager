@@ -5,8 +5,7 @@ import axios from "axios";
 
 // Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://77.37.47.79:8080",
-  // baseURL: "/",   // relative paths    // for nignix
+  baseURL: process.env.REACT_APP_API_URL || "",
   timeout: 10000,
   withCredentials: true,
 

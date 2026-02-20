@@ -1,7 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-const API_BASE = "http://77.37.47.79:8080/api/auth";
-//  const API_BASE = "/api/auth";    // for nignix
+const API_BASE = `${process.env.REACT_APP_API_URL || ''}/api/auth`;
 
 
 export interface SignupRequest {

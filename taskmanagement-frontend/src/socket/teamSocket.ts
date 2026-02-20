@@ -9,8 +9,9 @@ export const connectTeamSocket = (
   const token = localStorage.getItem("token");
 
   // Create SockJS connection
-  //const socket = new SockJS("http://localhost:8086/ws");
-  const socket = new SockJS("http://localhost/ws"); // for nignix
+  // Use gateway URL (build-time) or relative path so browser connects via gateway
+  const socketBase = process.env.REACT_APP_API_URL || '';
+  const socket = new SockJS(`${socketBase}/ws`);
 
   const client = new Client({
     webSocketFactory: () => socket,
