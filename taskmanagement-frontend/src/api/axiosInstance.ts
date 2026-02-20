@@ -5,8 +5,8 @@ import axios from "axios";
 
 // Axios instance
 const axiosInstance = axios.create({
- //baseURL: "http://localhost:8080",
-  baseURL: "/",   // relative paths    // for nignix
+  baseURL: "http://77.37.47.79:8080",
+  // baseURL: "/",   // relative paths    // for nignix
   timeout: 10000,
   withCredentials: true,
 

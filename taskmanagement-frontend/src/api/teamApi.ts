@@ -1,7 +1,7 @@
 import axiosInstance from "./axiosInstance"; // ✅ use centralized axios instance
 
-//const TEAM_API = "http://localhost:8080/api/teams";
-const TEAM_API = "/api/teams";
+const TEAM_API = "http://77.37.47.79:8080/api/teams";
+// const TEAM_API = "/api/teams";
 
 export interface Team {
   id: number;
@@ -31,7 +31,7 @@ export interface TeamAuditLog {
 }
 
 export const getTeamAuditLogs = (teamId: number) =>
-axiosInstance.get<TeamAuditLog[]>(`${TEAM_API}/${teamId}/audit`);
+  axiosInstance.get<TeamAuditLog[]>(`${TEAM_API}/${teamId}/audit`);
 
 
 export const getMyTeams = (userId: number) =>
@@ -40,12 +40,12 @@ export const getMyTeams = (userId: number) =>
   });
 
 export const createTeam = (name: string, createdBy: number) =>
- axiosInstance.post<Team>(`${TEAM_API}/create`, null, {
+  axiosInstance.post<Team>(`${TEAM_API}/create`, null, {
     params: { name, createdBy },
   });
 
 export const getTeamMembers = (teamId: number) =>
- axiosInstance.get<TeamMember[]>(`${TEAM_API}/${teamId}/members`);
+  axiosInstance.get<TeamMember[]>(`${TEAM_API}/${teamId}/members`);
 
 export const inviteMember = (
   teamId: number,
@@ -57,7 +57,7 @@ export const inviteMember = (
   });
 
 export const acceptInvite = (teamId: number, userId: number) =>
- axiosInstance.put<TeamMember>(`${TEAM_API}/${teamId}/accept`, null, {
+  axiosInstance.put<TeamMember>(`${TEAM_API}/${teamId}/accept`, null, {
     params: { userId },
   });
 
@@ -66,7 +66,7 @@ export const removeMember = (
   userId: number,
   performedBy: number
 ) =>
-axiosInstance.delete(`${TEAM_API}/${teamId}/remove-member`, {
+  axiosInstance.delete(`${TEAM_API}/${teamId}/remove-member`, {
     params: { userId, performedBy },
   });
 
@@ -76,6 +76,6 @@ export const changeRole = (
   role: string,
   performedBy: number
 ) =>
- axiosInstance.put<TeamMember>(`${TEAM_API}/${teamId}/change-role`, null, {
+  axiosInstance.put<TeamMember>(`${TEAM_API}/${teamId}/change-role`, null, {
     params: { userId, role, performedBy },
   });
