@@ -15,11 +15,12 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        List<String> origins = Arrays.asList("http://77.37.47.79:3000");
-        corsConfig.setAllowedOrigins(origins);
+        // Use allowedOriginPatterns to support origin with credentials
+        corsConfig.setAllowedOriginPatterns(Arrays.asList("http://77.37.47.79:3000"));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        corsConfig.addAllowedHeader("*");
+        corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setAllowCredentials(true);
+        corsConfig.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
