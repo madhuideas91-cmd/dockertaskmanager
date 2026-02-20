@@ -1,28 +1,28 @@
-
 spring:
   application:
     name: api-gateway
 
-
   cloud:
     gateway:
+      # Global CORS configuration
       globalcors:
-        add-to-simple-url-handler-mapping: true   # 🔥 VERY IMPORTANT
+        add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://77.37.47.79:3000"  #  FRONTEND URL
+              - "http://77.37.47.79:3000"   # ✅ FRONTEND URL
             allowedMethods:
               - GET
               - POST
               - PUT
-              - PATCH   #  REQUIRED
+              - PATCH
               - DELETE
               - OPTIONS
             allowedHeaders:
               - "*"
             allowCredentials: true
 
+      # Gateway routes
       routes:
         - id: user-service
           uri: lb://user-service
@@ -44,39 +44,31 @@ spring:
           predicates:
             - Path=/notifications/**
           filters:
-            - PreserveHostHeader         #for nignix add
+            - PreserveHostHeader
+            # ✅ Add CORS headers per route for safety
+            - AddResponseHeader=Access-Control-Allow-Origin,http://77.37.47.79:3000
+            - AddResponseHeader=Access-Control-Allow-Methods,GET,POST,PUT,PATCH,DELETE,OPTIONS
+            - AddResponseHeader=Access-Control-Allow-Headers,*
 
-        # ✅ SEPARATE WEBSOCKET ROUTE
-        - id:  notification-ws
-          uri: lb://notification-service   # or team-service (where socket lives) for nignix
+        - id: notification-ws
+          uri: lb://notification-service
           predicates:
             - Path=/ws/**
           filters:
             - PreserveHostHeader
 
-        # Route for Task Service WebSockets
-        - id:  task-ws
+        - id: task-ws
           uri: lb://task-service
           predicates:
             - Path=/ws/**
           filters:
             - PreserveHostHeader
 
-#        # Route for Notification Service WebSockets
-#        - id: notification-ws-route
-#          uri: lb://notification-service
-#          predicates:
-#            - Path=/ws/notifications/**
-#          filters:
-#            - RewritePath=/ws/notifications/(?<segment>.*), /ws/$\{segment}
-
         - id: project-service
           uri: lb://project-service
           predicates:
             - Path=/projects/**
 
-#        - id: team-service
-#          uri: lb://TEAMSERVICE
         - id: team-service
           uri: lb://team-service
           predicates:
@@ -92,9 +84,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-#       defaultZone: http://localhost:8761/eureka/
-       defaultZone: http://eureka:8761/eureka
-
-
-
-
+      defaultZone: http://eureka:8761/eureka
