@@ -1,14 +1,19 @@
-# Use Java 21 runtime
-FROM eclipse-temurin:21-jre
+# ---------- Build stage ----------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Copy JAR from target folder
-COPY target/*.jar app.jar
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Expose the port your service runs on
+# ---------- Runtime stage ----------
+FROM maven:3.9.6-eclipse-temurin-17
+
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8086
 
-# Command to run the JAR
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -1,25 +1,29 @@
-
-
-# Development Dockerfile
-FROM node:18-alpine
+# ======================
+# Build stage
+# ======================
+FROM node:20-alpine AS build
 WORKDIR /app
 
 # Accept build args
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
-# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the source code
 COPY . .
+RUN npm run build
 
-# Expose React dev server port
+# ======================
+# Production stage
+# ======================
+FROM node:20-alpine
+WORKDIR /app
+
+RUN npm install -g serve
+
+# CRA outputs "build", not "dist"
+COPY --from=build /app/build ./build
+
 EXPOSE 3000
-
-# Start the development server
-CMD ["sh", "-c", "REACT_APP_API_URL=$REACT_APP_API_URL npm start"]
-
-
-
+CMD ["serve", "-s", "build", "-l", "3000"]
