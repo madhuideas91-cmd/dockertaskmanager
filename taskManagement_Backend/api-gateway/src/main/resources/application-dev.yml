@@ -2,12 +2,23 @@ spring:
   cloud:
     gateway:
       globalcors:
+        add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
             allowedOrigins:
               - "http://77.37.47.79:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka:8761/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eureka:8761/eureka/}

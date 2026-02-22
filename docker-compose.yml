@@ -5,7 +5,7 @@ services:
     build:
       context: ./taskmanagement-frontend
       args:
-        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:8080}
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://77.37.47.79:8080}
     container_name: frontend
     ports:
       - "3000:3000"
