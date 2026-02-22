@@ -1,6 +1,6 @@
 package com.example.taskmanager.task_service.config;
 
-import jakarta.ws.rs.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,6 +31,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers("/tasks/byProject/**").permitAll()
+                    .requestMatchers("/tasks/member-stats").permitAll()
                         .requestMatchers("/tasks/**").authenticated()
                         .anyRequest().authenticated()
                 )

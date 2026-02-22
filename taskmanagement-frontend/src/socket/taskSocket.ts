@@ -1,5 +1,6 @@
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { API_URL } from "../config/api";
 
 /**
  * Connects to a project-specific WebSocket for live task updates.
@@ -13,7 +14,7 @@ export const connectTaskSocket = (
   const token = localStorage.getItem("token");
 
   // Use gateway URL (build-time) or relative path so browser connects via gateway
-  const socketBase = process.env.REACT_APP_API_URL || '';
+  const socketBase = API_URL;
   const socket = new SockJS(`${socketBase}/ws`);
   const client = new Client({
     webSocketFactory: () => socket,

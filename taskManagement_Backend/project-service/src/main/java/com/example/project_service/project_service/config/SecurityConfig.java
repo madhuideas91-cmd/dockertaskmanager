@@ -45,7 +45,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})   // ✅ allow CORS, but DO NOT define headers here
                 .authorizeHttpRequests(auth -> auth
                         // WebSocket
                         .requestMatchers("/ws/**", "/ws/info/**").permitAll()

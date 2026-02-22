@@ -3,3 +3,8 @@ spring:
     url: jdbc:mysql://mysql-user:3306/user_ServiceDB?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: password
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/

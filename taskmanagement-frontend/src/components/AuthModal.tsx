@@ -14,6 +14,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onAuthSuccess }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const getErrorMessage = (err: any): string => {
+    const data = err?.response?.data;
+    if (typeof data === "string" && data.trim()) return data;
+    if (data?.message && typeof data.message === "string") return data.message;
+    if (data?.error && typeof data.error === "string") return data.error;
+    if (err?.response?.status === 503) {
+      return "Service is starting. Please try again in a few seconds.";
+    }
+    if (err?.message && typeof err.message === "string") return err.message;
+    return "Something went wrong";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -23,12 +35,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onAuthSuccess }) => {
         const res = await loginUser({ email, password });
 
         const token = res.data.token;
-        const role = res.data.role; // ⭐ NEW
-        const userId = res.data.userId; // ✅ GET USER ID  // nignx
+        const role = res.data.role;
+        const userId = res.data.userId;
 
         localStorage.setItem("token", token);
-        localStorage.setItem("role", role); // ⭐ NEW
-         localStorage.setItem("userId", userId.toString()); // 🔥 ADD THIS // nignx
+        if (role) localStorage.setItem("role", role);
+        if (userId !== undefined && userId !== null) {
+          localStorage.setItem("userId", String(userId));
+        }
 
 
         onAuthSuccess(token);
@@ -38,18 +52,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onAuthSuccess }) => {
         const res = await loginUser({ email, password });
 
         const token = res.data.token;
-        const role = res.data.role; // ⭐ NEW
-        const userId = res.data.userId; // ✅ GET USER ID  // nignx
+        const role = res.data.role;
+        const userId = res.data.userId;
 
         localStorage.setItem("token", token);
-        localStorage.setItem("role", role); // ⭐ NEW
-        localStorage.setItem("userId", userId.toString()); // 🔥 ADD THIS nignix
+        if (role) localStorage.setItem("role", role);
+        if (userId !== undefined && userId !== null) {
+          localStorage.setItem("userId", String(userId));
+        }
 
         onAuthSuccess(token);
       }
       onClose();
     } catch (err: any) {
-      setError(err.response?.data || "Something went wrong");
+      setError(getErrorMessage(err));
     }
   };
 

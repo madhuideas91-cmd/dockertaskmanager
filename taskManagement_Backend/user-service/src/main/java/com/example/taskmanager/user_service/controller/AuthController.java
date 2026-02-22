@@ -43,7 +43,7 @@ public ResponseEntity<?> login(@RequestBody AuthRequest req) {
         return ResponseEntity.status(401).body("Invalid credentials");
     }
 
-    String token = jwtUtils.generateToken(user.getEmail());
+    String token = jwtUtils.generateToken(user.getEmail(), user.getId());
     return ResponseEntity.ok(new AuthResponse(token, user.getId())); // ✅ include userId
 }
 

@@ -1,16 +1,22 @@
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
   application:
     name: api-gateway
 
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
       # Global CORS configuration
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-              - "http://77.37.47.79:3000"   # ✅ FRONTEND URL
+              - "http://localhost:3000"   # FRONTEND URL
             allowedMethods:
               - GET
               - POST
@@ -28,6 +34,17 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/auth/**
+          filters:
+            - name: Retry
+              args:
+                retries: 4
+                methods: POST,GET
+                statuses: SERVICE_UNAVAILABLE
+                backoff:
+                  firstBackoff: 250ms
+                  maxBackoff: 2s
+                  factor: 2
+                  basedOnPreviousValue: false
 
         - id: task-service
           uri: lb://task-service
@@ -45,10 +62,6 @@ spring:
             - Path=/notifications/**
           filters:
             - PreserveHostHeader
-            # ✅ Add CORS headers per route for safety
-            - AddResponseHeader=Access-Control-Allow-Origin,http://77.37.47.79:3000
-            - AddResponseHeader=Access-Control-Allow-Methods,GET,POST,PUT,PATCH,DELETE,OPTIONS
-            - AddResponseHeader=Access-Control-Allow-Headers,*
 
         - id: notification-ws
           uri: lb://notification-service
@@ -83,5 +96,15 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    registry-fetch-interval-seconds: 5
     service-url:
-      defaultZone: http://eureka:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

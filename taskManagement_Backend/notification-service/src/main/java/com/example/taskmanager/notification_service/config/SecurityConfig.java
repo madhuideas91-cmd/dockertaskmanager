@@ -1,7 +1,7 @@
 package com.example.taskmanager.notification_service.config;
 
 import com.example.taskmanager.notification_service.security.JwtFilter;
-import jakarta.ws.rs.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()    
-                        .requestMatchers("/notifications/**").permitAll()   // 🔥 ALLOW
+                        .requestMatchers("/notifications/**").permitAll()   // ALLOW
                         //.requestMatchers("/actuator/**").permitAll()
                         //.anyRequest().authenticated())
                         .anyRequest().permitAll())
@@ -33,19 +33,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.setAllowedOrigins(List.of("http://localhost:3000"));
-//        config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-//        config.setAllowedHeaders(List.of("*"));
-//
-//        UrlBasedCorsConfigurationSource source =
-//                new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config);
-//        return source;
-//    }
 }

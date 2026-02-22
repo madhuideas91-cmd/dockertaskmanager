@@ -22,8 +22,6 @@ import TeamPage from "./pages/TeamPage";
 import { ToastProvider } from "./components/ToastProvider";
 
 const App: React.FC = () => {
-  const token = localStorage.getItem("token");
-
   return (
     <ToastProvider>
       <BrowserRouter>
@@ -33,7 +31,11 @@ const App: React.FC = () => {
             {/* Existing route */}
             <Route
               path="/dashboard"
-                  element={token ? <Dashboard /> : <Navigate to="/" replace />}
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
             />
 
             <Route path="/calendar" element={<CalendarPage />} />
@@ -41,25 +43,41 @@ const App: React.FC = () => {
             {/* ⭐ Projects page */}
             <Route
               path="/Projects"
-              element={token ? <Projects /> : <Navigate to="/" replace />}
+              element={
+                <ProtectedRoute>
+                  <Projects />
+                </ProtectedRoute>
+              }
             />
 
             {/* ⭐ Teams page */}
             <Route
               path="/Teams"
-              element={token ? <TeamPage /> : <Navigate to="/" replace />}
+              element={
+                <ProtectedRoute>
+                  <TeamPage />
+                </ProtectedRoute>
+              }
             />
 
             {/* ✅ ADD THIS */}
-              <Route
-                path="/reports"
-                element={token ? <Reports /> : <Navigate to="/" replace />}
-              />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <Reports />
+                </ProtectedRoute>
+              }
+            />
 
-              <Route
-                path="/settings"
-                element={token ? <SettingsPage /> : <Navigate to="/" replace />}
-              />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              }
+            />
             {/* ⭐ Admin only */}
             <Route
               path="/admin"

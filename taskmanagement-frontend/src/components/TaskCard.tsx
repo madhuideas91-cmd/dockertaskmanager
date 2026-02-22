@@ -9,6 +9,7 @@ import { Task } from "./KanbanBoard";
 import { useNavigate } from "react-router-dom";
 import { getAllProjects, Project } from "../api/projects";
 import ProjectDropdown from "./ProjectDropdown";
+import { API_URL } from "../config/api";
 
 interface TaskCardProps {
   task: Task;
@@ -33,14 +34,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, showOptions
   const [selectedProjectId, setSelectedProjectId] = useState<number | undefined>(task.projectId);
 
   // 🔹 Sync state if parent task updates externally
-    useEffect(() => {
-      setTitle(task.title);
-      setDescription(task.description || "");
-      setPriority(task.priority || "Low");
-      setAssignees(task.assignees?.map(String) || []);
-      setDueDate(task.dueDate || "");
-      setSelectedProjectId(task.projectId);
-    }, [task]);
+  useEffect(() => {
+    setTitle(task.title);
+    setDescription(task.description || "");
+    setPriority(task.priority || "Low");
+    setAssignees(task.assignees?.map(String) || []);
+    setDueDate(task.dueDate || "");
+    setSelectedProjectId(task.projectId);
+  }, [task]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -57,14 +58,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, showOptions
   }, []);
 
   const handleSave = async (
-      e: React.MouseEvent<HTMLButtonElement>
-      ) => {
-      e.stopPropagation(); // ✅ prevent triggering parent onClick
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation(); // ✅ prevent triggering parent onClick
 
     if (!selectedProjectId) {
-        addToast("Please select a project", "error");
-        return;
-      }
+      addToast("Please select a project", "error");
+      return;
+    }
     const updatedTask: Task = {
       ...task,
       title,
@@ -77,10 +78,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, showOptions
     };
 
     try {
-      //await axiosInstance.patch(`http://localhost:8080/tasks/updateTaskById/${task.id}`, updatedTask);
-      await axiosInstance.patch(`/tasks/updateTaskById/${task.id}`, updatedTask);  // for nignix
+      await axiosInstance.patch(`${API_URL}/tasks/updateTaskById/${task.id}`, updatedTask);
       onEdit(updatedTask);
-      try { await createNotification({ message: `Task "${updatedTask.title}" updated.` }); } catch {}
+      try { await createNotification({ message: `Task "${updatedTask.title}" updated.` }); } catch { }
       addToast(`Task "${updatedTask.title}" saved`, "success");
       setIsEditing(false);
     } catch (err) {
@@ -89,19 +89,19 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, showOptions
     }
   };
   const handleDelete = (e: React.MouseEvent) => {
-      e.stopPropagation(); // prevent triggering parent onClick
-      onDelete(task.id);
-    };
+    e.stopPropagation(); // prevent triggering parent onClick
+    onDelete(task.id);
+  };
 
-    const handleEdit = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsEditing(true);
-    };
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  };
 
-    const handleView = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      navigate(`/task/${task.id}`);
-    };
+  const handleView = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/task/${task.id}`);
+  };
 
   return (
     <div

@@ -7,6 +7,7 @@ import AddTaskButton from "./AddTaskButton";
 import { createNotification } from "../api/notifications";
 import { useToast } from "./ToastProvider";
 import "../styles/KanbanBoard.css";
+import { API_URL } from "../config/api";
 
 
 // ✅ Updated Task interface to match backend
@@ -103,11 +104,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ searchQuery = "", onSelectTas
     emitProjectsProgress(newTasks);
 
     try {
-      //await axiosInstance.patch(`http://localhost:8080/tasks/updateTaskById/${task.id}`, updatedTask);
-      axiosInstance.patch(`/tasks/updateTaskById/${task.id}`,updatedTask);  // for nignix
-      //await axiosInstance.patch(`http://localhost:8080/tasks/updateStatus/${task.id}`, { status: updatedTask.status });
-      await axiosInstance.patch(`/tasks/updateStatus/${task.id}`, { status: updatedTask.status });  // for nignix
-      try { await createNotification({ message: `Task "${task.title}" moved from ${oldStatus} → ${updatedTask.status}` }); } catch {}
+      axiosInstance.patch(`${API_URL}/tasks/updateTaskById/${task.id}`, updatedTask);
+      await axiosInstance.patch(`${API_URL}/tasks/updateStatus/${task.id}`, { status: updatedTask.status });
+      try { await createNotification({ message: `Task "${task.title}" moved from ${oldStatus} → ${updatedTask.status}` }); } catch { }
       addToast(`Moved "${task.title}" to ${updatedTask.status}`, "success");
     } catch (err) {
       setTasks(prevTasks);
@@ -134,9 +133,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ searchQuery = "", onSelectTas
     emitProjectsProgress(newTasks);
 
     try {
-      //await axiosInstance.delete(`http://localhost:8080/tasks/deleteTaskById/${id}`);
-      await axiosInstance.delete(`/tasks/deleteTaskById/${id}`);  // for nignix
-      try { await createNotification({ message: `Task "${t?.title ?? id}" deleted.` }); } catch {}
+      await axiosInstance.delete(`${API_URL}/tasks/deleteTaskById/${id}`);
+      try { await createNotification({ message: `Task "${t?.title ?? id}" deleted.` }); } catch { }
       addToast(`Deleted "${t?.title ?? id}"`, "success");
     } catch (err) {
       setTasks(prev);
@@ -173,7 +171,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ searchQuery = "", onSelectTas
         ref={scrollRef}
         onScroll={handleScroll}
 
-       className="kanban-container relative gap-4 overflow-y-visible p-2 md:p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-200 scroll-smooth snap-x snap-mandatory"
+        className="kanban-container relative gap-4 overflow-y-visible p-2 md:p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-200 scroll-smooth snap-x snap-mandatory"
 
       >
         {showLeftShadow && (
@@ -189,11 +187,11 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ searchQuery = "", onSelectTas
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-//                className="bg-white border border-gray-300 rounded-md flex-shrink-0 flex-1 min-w-[220px] md:min-w-[250px] p-3 max-h-[65vh] md:max-h-[70vh] overflow-y-auto snap-start"
-              className="kanban-column bg-white border border-gray-300 rounded-md flex-shrink-0 flex-1 min-w-[220px] md:min-w-[250px] p-3 max-h-[65vh] md:max-h-[70vh] overflow-y-auto snap-start"
+                //                className="bg-white border border-gray-300 rounded-md flex-shrink-0 flex-1 min-w-[220px] md:min-w-[250px] p-3 max-h-[65vh] md:max-h-[70vh] overflow-y-auto snap-start"
+                className="kanban-column bg-white border border-gray-300 rounded-md flex-shrink-0 flex-1 min-w-[220px] md:min-w-[250px] p-3 max-h-[65vh] md:max-h-[70vh] overflow-y-auto snap-start"
 
               >
-               <div className="kanban-column-title font-bold mb-3 text-lg truncate pb-1 border-b border-gray-300">{col}</div>
+                <div className="kanban-column-title font-bold mb-3 text-lg truncate pb-1 border-b border-gray-300">{col}</div>
                 {tasks
                   .filter((t) => t.status === statusMapReverse[col] && t.title.toLowerCase().includes(searchQuery.toLowerCase()))
                   .map((task, index) => (
@@ -203,8 +201,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ searchQuery = "", onSelectTas
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-//                           className="mb-3"
-                           className="kanban-task mb-3"
+                          //                           className="mb-3"
+                          className="kanban-task mb-3"
 
                         >
                           <TaskCard

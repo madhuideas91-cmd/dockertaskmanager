@@ -22,6 +22,16 @@ public class JwtUtils {
 
     public Long getUserIdFromToken(String token) {
         Claims claims = parseToken(token).getBody();
-        return claims.get("userId", Long.class);
+        Object userId = claims.get("userId");
+        if (userId instanceof Long value) {
+            return value;
+        }
+        if (userId instanceof Integer value) {
+            return value.longValue();
+        }
+        if (userId instanceof String value) {
+            return Long.parseLong(value);
+        }
+        throw new IllegalArgumentException("Invalid userId claim in token");
     }
 }

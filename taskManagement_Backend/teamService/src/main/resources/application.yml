@@ -3,6 +3,9 @@ server:
   address: 0.0.0.0
 
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
   application:
     name: team-service
   datasource:
@@ -29,8 +32,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-       defaultZone: http://eureka:8761/eureka/
-#      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 
 logging:
   level:

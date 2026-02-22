@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance"; // ✅ use centralized axios instance
+import { API_URL } from "../config/api";
 
-const TEAM_API = `${process.env.REACT_APP_API_URL || ''}/api/teams`;
+const TEAM_API = `${API_URL}/api/teams`;
 // const TEAM_API = "/api/teams";
 
 export interface Team {

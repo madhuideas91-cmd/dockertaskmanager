@@ -5,6 +5,7 @@ import axiosInstance from "../api/axiosInstance";
 import { useToast } from "../components/ToastProvider";
 import { FaUserCircle, FaSearch } from "react-icons/fa";
 import CommentsPanel, { Comment } from "../components/CommentsPanel";
+import { API_URL } from "../config/api";
 
 const Dashboard: React.FC = () => {
   const { addToast } = useToast();
@@ -20,14 +21,14 @@ const Dashboard: React.FC = () => {
   const fetchUser = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axiosInstance.get<{ id: number; email: string; role: string; name: string;}>(
+      const res = await axiosInstance.get<{ id: number; email: string; role: string; name: string; }>(
         //"http://localhost:8080/api/auth/profile",
-          "/api/auth/profile",  // for nignix
+        "/api/auth/profile",  // for nignix
 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUserName(res.data.email);
-//       setCurrentUserId(null);
+      //       setCurrentUserId(null);
       setCurrentUserId(res.data.id);
     } catch (err) {
       console.error("Failed to fetch user", err);
@@ -39,7 +40,7 @@ const Dashboard: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       //const res = await axiosInstance.get<Comment[]>(`/api/comments/task/${taskId}`, {
-       const res = await axiosInstance.get<Comment[]>(`/api/comments/task/${taskId}`, {
+      const res = await axiosInstance.get<Comment[]>(`/api/comments/task/${taskId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments(res.data || []);
@@ -98,7 +99,7 @@ const Dashboard: React.FC = () => {
       const token = localStorage.getItem("token");
       const res = await axiosInstance.post<Comment>(
         //"http://localhost:8080/api/comments/add",
-          "/api/comments/add",  // for nignix
+        "/api/comments/add",  // for nignix
         { text, taskId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -112,8 +113,7 @@ const Dashboard: React.FC = () => {
   const deleteComment = async (id: number) => {
     try {
       const token = localStorage.getItem("token");
-       //await axios.delete(`http://localhost:8080/api/comments/${id}`, {
-        await axiosInstance.delete(`/api/comments/${id}`,{      // for nignix
+      await axiosInstance.delete(`${API_URL}/api/comments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => prev.filter((c) => c.id !== id));
@@ -172,29 +172,29 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-            {/* Kanban + Comments */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-8 items-start min-w-0">
+        {/* Kanban + Comments */}
+        <div className="flex flex-col lg:flex-row gap-4 mb-8 items-start min-w-0">
 
-              <div className="flex-1 min-w-0 max-w-full overflow-x-auto border border-gray-300 rounded bg-white p-2">
-                <KanbanBoard
-                  searchQuery={searchQuery}
-                  onSelectTask={(task) => {
-                    setSelectedTask(task);
-                    fetchCommentsForTask(task.id);
-                  }}
-                />
-              </div>
+          <div className="flex-1 min-w-0 max-w-full overflow-x-auto border border-gray-300 rounded bg-white p-2">
+            <KanbanBoard
+              searchQuery={searchQuery}
+              onSelectTask={(task) => {
+                setSelectedTask(task);
+                fetchCommentsForTask(task.id);
+              }}
+            />
+          </div>
 
-              <div className="w-full lg:w-80 flex-shrink-0 border border-gray-300 rounded bg-white p-2">
-               <CommentsPanel
-                 comments={comments}
-                 onAddComment={(text) => selectedTask && addComment(text, selectedTask.id)}
-                 onDeleteComment={deleteComment}
-                 currentUserId={currentUserId ?? undefined}
-               />
+          <div className="w-full lg:w-80 flex-shrink-0 border border-gray-300 rounded bg-white p-2">
+            <CommentsPanel
+              comments={comments}
+              onAddComment={(text) => selectedTask && addComment(text, selectedTask.id)}
+              onDeleteComment={deleteComment}
+              currentUserId={currentUserId ?? undefined}
+            />
 
-              </div>
-            </div>
+          </div>
+        </div>
 
         {/* Upcoming Deadlines */}
         <div className="bg-white border border-gray-300 rounded-xl shadow-md p-4 w-full md:w-auto">
@@ -218,16 +218,16 @@ const Dashboard: React.FC = () => {
                   t.priority === "High"
                     ? "bg-gradient-to-r from-red-400 to-red-600"
                     : t.priority === "Medium"
-                    ? "bg-gradient-to-r from-yellow-400 to-yellow-600"
-                    : "bg-gradient-to-r from-green-400 to-green-600";
+                      ? "bg-gradient-to-r from-yellow-400 to-yellow-600"
+                      : "bg-gradient-to-r from-green-400 to-green-600";
 
                 // ✅ Updated initials to use assignees array
                 const initials =
                   t.assignees && t.assignees.length > 0
                     ? t.assignees
-                        .map((id: number) => id.toString()[0]) // first digit of ID
-                        .join("")
-                        .toUpperCase()
+                      .map((id: number) => id.toString()[0]) // first digit of ID
+                      .join("")
+                      .toUpperCase()
                     : "?";
 
                 return (
@@ -249,8 +249,8 @@ const Dashboard: React.FC = () => {
                         {diffDays > 0
                           ? `in ${diffDays} day${diffDays > 1 ? "s" : ""}`
                           : diffDays === 0
-                          ? "Today"
-                          : `${-diffDays} day${-diffDays > 1 ? "s" : ""} ago`}
+                            ? "Today"
+                            : `${-diffDays} day${-diffDays > 1 ? "s" : ""} ago`}
                       </span>
                       <span className="text-xs text-gray-100">
                         {due.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}

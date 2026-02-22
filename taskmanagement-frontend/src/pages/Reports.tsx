@@ -59,7 +59,7 @@ const Reports: React.FC = () => {
         // --- Tasks
         const tasksRes = await axiosInstance.get<any[]>(
          //"http://localhost:8080/tasks/getAllTasks"
-             "/tasks/getAllTasks"   // for nignix
+             "/tasks/getAllTasks"
         );
 
         const mappedTasks: TaskReport[] = tasksRes.data.map((t) => ({
@@ -80,14 +80,14 @@ const Reports: React.FC = () => {
         // --- Projects
         const projectsRes = await axiosInstance.get<ProjectReport[]>(
            //"http://localhost:8080/projects/getAllProjectsWithProgress"
-         "/projects/getAllProjectsWithProgress"   // for nignix
+         "/projects/getAllProjectsWithProgress"
         );
         setProjects(projectsRes.data);
 
         // --- Teams (✅ FIX)
         const teamsRes = await axiosInstance.get<Team[]>(
            //"http://localhost:8080/api/teams/my-teams",
-              "/api/teams/my-teams",  // for nignix
+              "/api/teams/my-teams",
           {
             params: { userId: Number(localStorage.getItem("userId")) },
           }

@@ -8,6 +8,7 @@ import {
   getNotificationPreferences,
   updateNotificationPreferences,
 } from "../api/notifications";
+import { API_URL } from "../config/api";
 
 type NotificationType =
   | "TASK_ASSIGNED"
@@ -76,7 +77,7 @@ const SettingsPage: React.FC = () => {
   );
   const [density, setDensity] = useState<"compact" | "comfortable">(
     (localStorage.getItem("density") as "compact" | "comfortable") ||
-      "comfortable"
+    "comfortable"
   );
 
   // Notifications
@@ -186,10 +187,10 @@ const SettingsPage: React.FC = () => {
             key.toUpperCase() === "TASKASSIGNED"
               ? "TASK_ASSIGNED"
               : key.toUpperCase() === "STATUSCHANGED"
-              ? "STATUS_CHANGED"
-              : key.toUpperCase() === "COMMENTMENTION"
-              ? "COMMENT_MENTION"
-              : "PROJECT_UPDATES";
+                ? "STATUS_CHANGED"
+                : key.toUpperCase() === "COMMENTMENTION"
+                  ? "COMMENT_MENTION"
+                  : "PROJECT_UPDATES";
           return { type, emailEnabled: val.email, inAppEnabled: val.inApp };
         });
         await updateNotificationPreferences(payload);
@@ -232,7 +233,7 @@ const SettingsPage: React.FC = () => {
   const handleSaveProfile = async () => {
     if (!profile) return;
     try {
-       await axiosInstance.put("/api/auth/profile", {
+      await axiosInstance.put(`${API_URL}/api/auth/profile`, {
         name: profile.name,
         email: profile.email,
       });
@@ -255,7 +256,7 @@ const SettingsPage: React.FC = () => {
     }
     try {
       setPasswordLoading(true);
-        await axiosInstance.put("/api/auth/change-password", {
+      await axiosInstance.put(`${API_URL}/api/auth/change-password`, {
         currentPassword,
         newPassword,
       });
@@ -287,18 +288,17 @@ const SettingsPage: React.FC = () => {
             ].map((sec) => (
               <div
                 key={sec}
-                className={`cursor-pointer px-4 py-2 rounded mb-2 transition-colors duration-200 ${
-                  activeSection === sec
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
+                className={`cursor-pointer px-4 py-2 rounded mb-2 transition-colors duration-200 ${activeSection === sec
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-700 hover:bg-gray-100"
+                  }`}
                 onClick={() =>
                   setActiveSection(
                     sec as
-                      | "Profile"
-                      | "Account"
-                      | "Appearance"
-                      | "Notifications"
+                    | "Profile"
+                    | "Account"
+                    | "Appearance"
+                    | "Notifications"
                   )
                 }
               >

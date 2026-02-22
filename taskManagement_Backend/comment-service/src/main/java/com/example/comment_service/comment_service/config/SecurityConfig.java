@@ -2,9 +2,9 @@ package com.example.comment_service.comment_service.config;
 
 import com.example.comment_service.comment_service.security.JwtAuthEntryPoint;
 import com.example.comment_service.comment_service.security.JwtFilter;
-import jakarta.ws.rs.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,6 +24,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> {}) // ✅ activates CorsConfigurationSource
                 .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comments/task/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/comments/add").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()

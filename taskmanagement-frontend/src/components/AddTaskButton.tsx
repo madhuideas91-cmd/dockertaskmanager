@@ -5,6 +5,7 @@ import { useToast } from "./ToastProvider";
 import { Task } from "./KanbanBoard";
 import { getAllProjects, Project } from "../api/projects";
 import ProjectDropdown from "./ProjectDropdown";
+import { API_URL } from "../config/api";
 
 interface AddTaskButtonProps {
   column: string;
@@ -43,16 +44,15 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ column, projectId, onTask
 
     try {
       const response = await axiosInstance.post<Task>(
-        //"http://localhost:8080/tasks/createTask",
-         "/tasks/createTask",    // for nignix
+        `${API_URL}/tasks/createTask`,
         {
           title,
           status:
             column === "To Do"
               ? "OPEN"
               : column === "In Progress"
-              ? "IN_PROGRESS"
-              : "DONE",
+                ? "IN_PROGRESS"
+                : "DONE",
           projectId: selectedProjectId,
           priority,
           assignees: assignees

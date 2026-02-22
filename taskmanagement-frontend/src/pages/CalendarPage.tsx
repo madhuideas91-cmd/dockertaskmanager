@@ -6,6 +6,7 @@ import { Client, IMessage } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import Modal from "react-modal";
 import { FaUserCircle } from "react-icons/fa";
+import { API_URL } from "../config/api";
 
 /* ---------------- Interfaces ---------------- */
 interface Task {
@@ -44,7 +45,7 @@ const CalendarPage: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       const taskRes = await axiosInstance.get<Task[]>(
-         //"http://localhost:8080/tasks/getAllTasks"
+        //"http://localhost:8080/tasks/getAllTasks"
         "/tasks/getAllTasks"   // for nignix
       );
       taskMapRef.current.clear();
@@ -58,8 +59,7 @@ const CalendarPage: React.FC = () => {
   /* ---------------- WebSocket ---------------- */
   useEffect(() => {
     fetchData();
-    //const socket = new SockJS("http://localhost:8085/ws");
-    const socket = new SockJS("/ws");   // for nignix
+    const socket = new SockJS(`${API_URL}/ws`);
     const stomp = new Client({
       webSocketFactory: () => socket as any,
       reconnectDelay: 5000,
@@ -248,9 +248,8 @@ const CalendarPage: React.FC = () => {
                   setViewMode(v as any);
                   if (v === "WEEK") setWeekStart(startOfWeek(new Date()));
                 }}
-                className={`px-3 py-1 border rounded ${
-                  viewMode === v ? "bg-indigo-600 text-white" : "hover:bg-gray-100"
-                }`}
+                className={`px-3 py-1 border rounded ${viewMode === v ? "bg-indigo-600 text-white" : "hover:bg-gray-100"
+                  }`}
               >
                 {v}
               </button>
