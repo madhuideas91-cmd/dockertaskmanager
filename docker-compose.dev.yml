@@ -57,6 +57,7 @@ services:
     networks:
       - backend-network
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-http://77.37.47.79:3000}
     healthcheck:
